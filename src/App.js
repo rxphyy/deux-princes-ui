@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import axios from 'axios';
 import './App.css';
-import { useEffect, useState } from 'react';
-/* global gapi */
+import { useState } from 'react';
 
 function App() {
   const [videos, setVideos] = useState([]);
@@ -15,6 +13,7 @@ function App() {
           key: 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI',
           videoId: videoId,
           part: 'snippet',
+          lang: 'fr'
         },
       });
       
@@ -41,7 +40,7 @@ function App() {
           key: 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI',
           playlistId: 'PLBeZasrZ8WgFWEaZADycG4SqaVynvM4ty',
           part: 'snippet',
-          maxResults: 1000
+          maxResults: 1
         },
       })
       .then((response) => {
@@ -59,29 +58,33 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <form onSubmit={trouverDeuxPrinces}>
-          <input type='submit' value={'Trouver touts les Deux Princes'}></input>
-        </form>
-        {videos.map((video) => (
-          <li key={video.id.videoId}>
-            <img src={video.snippet.thumbnails.maxres.url} alt={video.snippet.title} />
-            <p>{video.snippet.title}</p>
-            <a target="_blank" rel="noopener noreferrer" href={`https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`}>Voir la vid</a>
-          </li>
-        ))}
+        <p className='pageTitle'>DEUX PRINCES</p>
 
+        <p className='pageSubTitle'>« Te rappelles-tu quand Thomas a dit...? »</p>
+        <p className='pageSubTitle2'>« C'est dans quel épisode que Phil parle de...? »</p>
+
+        <form onSubmit={trouverDeuxPrinces}>
+          <div className='formContainer'>
+            <div className='box input_field'>
+              <i id='icon' class="fa-solid fa-magnifying-glass"></i>
+              <input className='input_field_inner' type='text' placeholder={''}></input>
+            </div>
+
+            <div className='input_box'>
+              <input className='box input_btn' type='submit' value={'Chercher'}></input>
+            </div>
+          </div>
+        </form>
+
+        <div>
+          {videos.map((video) => (
+            <div>
+              <h3>{video.snippet.title}</h3>
+              <a target="_blank" rel="noopener noreferrer" href={`https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`}>Voir la vid</a>
+              <img src={video.snippet.thumbnails.maxres.url} alt={video.snippet.title} />
+            </div>
+          ))}
+        </div>
       </header>
     </div>
   );
