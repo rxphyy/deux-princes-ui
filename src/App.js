@@ -40,7 +40,7 @@ function App() {
           key: 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI',
           playlistId: 'PLBeZasrZ8WgFWEaZADycG4SqaVynvM4ty',
           part: 'snippet',
-          maxResults: 1
+          maxResults: 2
         },
       })
       .then((response) => {
@@ -76,12 +76,14 @@ function App() {
           </div>
         </form>
 
-        <div>
+        <div className='videosContainer'>
           {videos.map((video) => (
-            <div>
-              <h3>{video.snippet.title}</h3>
-              <a target="_blank" rel="noopener noreferrer" href={`https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`}>Voir la vid</a>
-              <img src={video.snippet.thumbnails.maxres.url} alt={video.snippet.title} />
+            <div className='videoItemBox'>
+              <img className='videoItemImg' src={video.snippet.thumbnails.maxres.url} alt={video.snippet.title} />
+              <h3>« {video.snippet.title.substring(15)} »</h3>
+              <a className='videoItemLink' target="_blank" rel="noopener noreferrer" href={`https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`}>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
             </div>
           ))}
         </div>

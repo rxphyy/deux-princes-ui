@@ -40,7 +40,7 @@
   font-family: CenturyCaps;
   font-size: 120px;
   margin-bottom: 80px;
-  margin-top: 1px;
+  margin-top: 100px;
 }
 
 .pageSubTitle, .pageSubTitle2 {
@@ -95,6 +95,7 @@
   flex: 0;
   align-self: flex-start;
   box-sizing: border-box;
+  transition: background-color 0.2s;
 }
 
 #test {
@@ -121,8 +122,37 @@
 
 .input_btn:hover {
   cursor:pointer;
+  background-color: transparent;
+  color: #fcf1c2;
 }
 
+.videosContainer {
+  width: fit-content;
+  display: flex;
+  margin-top: 30px;
+}
+
+.videoItemBox {
+  border-radius: 10px;
+  border: 2px solid #fcf1c2;
+  width: min-content;
+  position: relative;
+  margin: 10px;
+}
+
+.videoItemImg {
+  width: 50vh;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+
+.videoItemLink {
+  color: #fcf1c2;
+  position: absolute;
+      bottom: 15px; /* Adjust as needed for the desired distance from the bottom */
+      right: 15px;
+}
 
 /* Media query for small screens */
 @media screen and (max-width: 768px) {
