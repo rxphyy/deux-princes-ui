@@ -1,4 +1,4 @@
-# Recherche dans les épisodes de Deux Princes 
+# Recherche dans les épisodes de Deux Princes
 
 J'ai fait cette application pour permettre aux auditeurs du podcast [*Deux Princes*](https://www.patreon.com/thomaslevac) de Thomas Levac et Philippe-Audrey Larrue Saint-Jacques de chercher parmi les épisodes pour trouver des segments par texte.
 

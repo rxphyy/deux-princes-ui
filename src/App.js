@@ -2,9 +2,35 @@ import axios from 'axios';
 import './App.css';
 import { useState } from 'react';
 
+
 function App() {
   const [videos, setVideos] = useState([]);
   const [captions, setCaptions] = useState({});
+
+  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=b1Lbhlb8290');
+  const [downloadedSubtitles, setDownloadedSubtitles] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post('http://localhost:3001/api/download-subtitles', {
+        videoUrl,
+      });
+
+      setDownloadedSubtitles(response.data.output);
+      console.log(downloadedSubtitles);
+    } catch (err) {
+      setError('An error occurred while downloading subtitles.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchCaptions = async (videoId) => {
     try {
@@ -30,9 +56,8 @@ function App() {
     }
   };
 
-  const trouverDeuxPrinces = (e) => {
+  const fetchAllEpisodes = (e) => {
     e.preventDefault();
-    console.log("Hello world!");
 
     axios
       .get('https://www.googleapis.com/youtube/v3/playlistItems', {
@@ -40,15 +65,17 @@ function App() {
           key: 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI',
           playlistId: 'PLBeZasrZ8WgFWEaZADycG4SqaVynvM4ty',
           part: 'snippet',
-          maxResults: 1
+          maxResults: 3
         },
       })
       .then((response) => {
         setVideos(response.data.items);
         // Fetch captions for each video
+        /*
         response.data.items.forEach((video) => {
           fetchCaptions(video.snippet.resourceId.videoId);
         });
+        */
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -63,7 +90,7 @@ function App() {
         <p className='pageSubTitle'>« Te rappelles-tu quand Thomas a dit...? »</p>
         <p className='pageSubTitle2'>« C'est dans quel épisode que Phil parle de...? »</p>
 
-        <form onSubmit={trouverDeuxPrinces}>
+        <form onSubmit={fetchAllEpisodes} disabled={loading}>
           <div className='formContainer'>
             <div className='box input_field'>
               <i id='icon' class="fa-solid fa-magnifying-glass"></i>
