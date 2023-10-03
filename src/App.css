@@ -26,7 +26,8 @@
 .App-header {
   background-image: url('../public/assets/backsplash.jpg');
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size:cover;
+  background-attachment: fixed;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -98,6 +99,21 @@
   transition: background-color 0.2s;
 }
 
+.loader {
+  border: 4px solid rgba(0, 0, 0, 0.3);
+  border-top: 4px solid #fcf1c2;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  margin-top: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 #test {
   border: 2px solid red;
 }
@@ -126,32 +142,129 @@
   color: #fcf1c2;
 }
 
+.infobox {
+  height: fit-content;
+  margin: auto 0px auto 20px;
+}
+
+#infoIcon {
+  font-size: 30px;
+}
+
+.infoTooltip {
+  background-color: #ccc;
+  color: #000;
+  position: absolute;
+  bottom: 160px;
+  right: 45px;
+  width: 20%;
+  padding: 1px 10px;
+}
+
+.infobox .tesst {
+  border-radius: 10px;
+  font-weight: 600;
+  width: 100px;
+}
+
 .videosContainer {
-  width: fit-content;
-  display: flex;
-  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); /* Adjust the minmax values as needed */
+  gap: 15px; /* Adjust the gap between items as needed */
+  justify-content: center; /* Center items horizontally */
+  margin: 30px;
 }
 
 .videoItemBox {
   border-radius: 10px;
-  border: 2px solid #fcf1c2;
-  width: min-content;
+  border: 3px solid #fcf1c2;
   position: relative;
-  margin: 10px;
+  margin: 10px auto;
+  background-color: #111113;
+  height: fit-content;
 }
 
 .videoItemImg {
-  width: 50vh;
-  margin: 10px;
+  width: 100%;
+  object-fit: cover; /* You can use "cover" or other values to control the image's appearance */
+  z-index: -1;
   border-radius: 10px;
 }
 
+.videoItemTitleLbl {
+  font-size: 30px;
+  font-family: Century;
+  padding: 10px 10px;
+  width: fit-content;
+  margin: 10px auto 20px auto;
+}
 
-.videoItemLink {
+
+.timestampItem {
+  display: flex;
+  justify-content: space-between; /* Title on left, timestamp on right */
+  align-items: center; /* Vertically center content */
+  margin: auto;
+  vertical-align: middle;
+  border-top: 1px solid #ccc; /* Add a top border to separate timestamps */
+  padding: 10px;
+  transition: background-color 0.4s;
+  /* Additional styles for timestamps */
+}
+
+.timestampItem:hover > #timestampIcon {
   color: #fcf1c2;
-  position: absolute;
-      bottom: 15px; /* Adjust as needed for the desired distance from the bottom */
-      right: 15px;
+}
+
+.timestampItem:hover  {
+  background-color: #fcf1c21e;
+  cursor: pointer;
+}
+
+.timestampTitle {
+  flex-grow: 1; /* Allow title to grow and take available space */
+  white-space: nowrap; /* Prevent title from breaking to the next line */
+  overflow: hidden; /* Hide overflow */
+  text-align: start;
+  margin-left: 5px;
+  color: white;
+  text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
+  width: 50vh;
+  /* Additional styles for title */
+}
+
+.timestampTime {
+  color: white;
+  font-weight: 600;
+  margin: 0px 10px 0px 10px; /* Add space between title and timestamp */
+  transition: color 0.4s;
+  /* Additional styles for timestamp */
+}
+
+#timestampIcon {
+  transition: color 0.4s;
+  color: white;
+}
+
+.timestampHighlighted {
+  background-color: #fcf1c2;
+  color: #111113;
+}
+
+.timestampHref {
+  text-decoration: none;
+}
+
+.footer {
+  border: 2px solid blue;
+  width: 99%;
+}
+
+.footerInfo {
+  color: #fcf1c2;
+  border: 2px solid red;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 /* Media query for small screens */
@@ -161,6 +274,9 @@
   }
   .pageSubTitle, .pageSubTitle2 {
     font-size: 30px;
+  }
+  .videosContainer {
+    width: 20vh;
   }
 }
 

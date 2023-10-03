@@ -1,86 +1,33 @@
 import axios from 'axios';
 import './App.css';
-import { useState } from 'react';
+//import 'react-tooltip/dist/react-tooltip.css'
+import React, { useState } from 'react';
+import { Tooltip } from 'react-tooltip'
 
 
 function App() {
   const [videos, setVideos] = useState([]);
-  const [captions, setCaptions] = useState({});
-
-  const [videoUrl, setVideoUrl] = useState('https://www.youtube.com/watch?v=b1Lbhlb8290');
-  const [downloadedSubtitles, setDownloadedSubtitles] = useState('');
+  const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const handleDownload = async (e) => {
+  const fetchMatchingEpisodes = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setVideos([])
 
     try {
-      const response = await axios.post('http://localhost:3001/api/download-subtitles', {
-        videoUrl,
-      });
-
-      setDownloadedSubtitles(response.data.output);
-      console.log(downloadedSubtitles);
-    } catch (err) {
-      setError('An error occurred while downloading subtitles.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchCaptions = async (videoId) => {
-    try {
-      const response = await axios.get('https://www.googleapis.com/youtube/v3/captions', {
+      await axios.get('http://localhost:3001/api/fetchMatchingCaptions', {
         params: {
-          key: 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI',
-          videoId: videoId,
-          part: 'snippet',
-          lang: 'fr'
-        },
-      });
-      
-      // Store captions in the state
-      setCaptions((prevCaptions) => ({
-        ...prevCaptions,
-        [videoId]: response.data.items,
-      }));
-
-      const transcript = response.data.items[0]?.snippet?.title || 'Transcript not available';
-      console.log(transcript);
+          'search': userInput,
+        }
+      }).then((res) => {
+        setVideos(res.data);
+        setLoading(false);
+      })
     } catch (error) {
-      console.error(`Error fetching captions for video ${videoId}:`, error);
+      console.error(`Error fetching captions for ${e.target.value}:`, error);
     }
   };
-
-  const fetchAllEpisodes = (e) => {
-    e.preventDefault();
-
-    axios
-      .get('https://www.googleapis.com/youtube/v3/playlistItems', {
-        params: {
-          key: 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI',
-          playlistId: 'PLBeZasrZ8WgFWEaZADycG4SqaVynvM4ty',
-          part: 'snippet',
-          maxResults: 3
-        },
-      })
-      .then((response) => {
-        setVideos(response.data.items);
-        // Fetch captions for each video
-        /*
-        response.data.items.forEach((video) => {
-          fetchCaptions(video.snippet.resourceId.videoId);
-        });
-        */
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }
 
   return (
     <div className="App">
@@ -90,29 +37,70 @@ function App() {
         <p className='pageSubTitle'>« Te rappelles-tu quand Thomas a dit...? »</p>
         <p className='pageSubTitle2'>« C'est dans quel épisode que Phil parle de...? »</p>
 
-        <form onSubmit={fetchAllEpisodes} disabled={loading}>
+        <form onSubmit={fetchMatchingEpisodes} disabled={loading}>
           <div className='formContainer'>
             <div className='box input_field'>
               <i id='icon' class="fa-solid fa-magnifying-glass"></i>
-              <input className='input_field_inner' type='text' placeholder={''}></input>
+              <input className='input_field_inner' value={userInput} onChange={(e) => setUserInput(e.target.value)} type='text' placeholder={''}></input>
             </div>
 
             <div className='input_box'>
               <input className='box input_btn' type='submit' value={'Chercher'}></input>
             </div>
+
+
+            <div className='infobox'>
+              <p
+                data-tooltip-id="my-tooltip" 
+                data-tooltip-content="Entrez un sujet et retrouvez tous les moments de Deux Princes où il est mentionné.">
+                <i id='infoIcon' class="fa-regular fa-circle-question"></i>
+              </p>
+              <Tooltip className='tesst' id="my-tooltip" variant='light' />
+            </div>
+
           </div>
         </form>
 
-        <div className='videosContainer'>
-          {videos.map((video) => (
-            <div className='videoItemBox'>
-              <img className='videoItemImg' src={video.snippet.thumbnails.maxres.url} alt={video.snippet.title} />
-              <h3>« {video.snippet.title.substring(15)} »</h3>
-              <a className='videoItemLink' target="_blank" rel="noopener noreferrer" href={`https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`}>
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-              </a>
-            </div>
-          ))}
+        {loading ? 
+        <>
+        <div class="loader"></div>
+        </> : 
+          <div className='videosContainer'>
+            {videos.length > 0 ? videos.map((video) => (
+              <div className='videoItemBox'>
+                <a className='videoItemLink' target="_blank" rel="noopener noreferrer" href={`https://youtube.com/watch?v=${video.videoId}`}>
+                  <img className='videoItemImg' src={video.thumbnailUrl} alt={video.videotitle} />
+                </a>
+                <h3 className='videoItemTitleLbl'>« {video.videoTitle.substring(15)} »</h3>
+                
+                <div className='timestampList'>
+                {video.captions.map((caption, index) => (
+                  <>
+                    <a className='timestampHref' target="_blank" rel="noopener noreferrer" href={`https://youtube.com/watch?v=${video.videoId}&t=${caption.startTime.split(':').reduce((acc, time) => acc * 60 + parseInt(time), 0)}`}>
+                      <div key={index} className='timestampItem'>
+                        <div className="timestampTitle">
+                          {caption.text.split(new RegExp(userInput, 'i')).map((part, partIndex) => (
+                            <React.Fragment key={partIndex}>
+                              {partIndex > 0 && (
+                                <span className='timestampHighlighted'>{userInput}</span>
+                              )}
+                              {part}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                        <div className="timestampTime">{caption.startTime.split(',')[0]}</div>
+                        <i id='timestampIcon' class="fa-solid fa-arrow-up-right-from-square"></i>
+                      </div>
+                    </a>
+                  </>
+                ))}
+                </div>
+              </div>
+            )) : <></>}
+          </div>
+        }
+        <div className='footer'>
+          <a className='footerInfo' href='https://github.com/rxphyy?tab=repositories'>Fait par Raphaël Marier</a>
         </div>
       </header>
     </div>
