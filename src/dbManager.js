@@ -100,8 +100,8 @@ async function isVideoInCollection(videoId, collection) {
 const searchSubtitles = async (query) => {
   try {
     await client.connect();
-    const database = client.db('deuxPrinces'); // Replace with your database name
-    const subtitlesCollection = database.collection('subtitles'); // Replace with your collection name
+    const database = client.db('deuxPrinces');
+    const subtitlesCollection = database.collection('subtitles');
 
     const cursor = subtitlesCollection.aggregate([
       {

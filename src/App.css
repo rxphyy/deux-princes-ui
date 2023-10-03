@@ -1,3 +1,4 @@
+/* Font faces */
 @font-face {
   font-family: 'CenturyCaps';
   src: url('../public/fonts/century-old-style-caps-regular.ttf') format('opentype');
@@ -8,33 +9,22 @@
   src: url('../public/fonts/century-old-style-regular.otf') format('opentype');
 }
 
-.App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
+.appParent {
   background-image: url('../public/assets/backsplash.jpg');
   background-repeat: no-repeat;
   background-size:cover;
   background-attachment: fixed;
-  background-color: #282c34;
-  min-height: 100vh;
+}
+
+.App {
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #fcf1c2;
+  min-height: 100vh;
 }
 
 .pageTitle {
@@ -42,6 +32,7 @@
   font-size: 120px;
   margin-bottom: 80px;
   margin-top: 100px;
+  user-select: none;
 }
 
 .pageSubTitle, .pageSubTitle2 {
@@ -49,6 +40,7 @@
   font-size: 30px;
   font-weight: 700;
   font-family: Century;
+  user-select: none;
 }
 
 
@@ -97,6 +89,10 @@
   align-self: flex-start;
   box-sizing: border-box;
   transition: background-color 0.2s;
+  user-select: none; /* Prevent text selection */
+  -webkit-user-select: none; /* For Safari */
+  -moz-user-select: none; /* For Firefox */ 
+  user-select: none;
 }
 
 .loader {
@@ -256,13 +252,18 @@
 }
 
 .footer {
-  border: 2px solid blue;
   width: 99%;
+  text-align: end;
+  padding-bottom: 10px;
 }
 
 .footerInfo {
   color: #fcf1c2;
-  border: 2px solid red;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+#footerIcon {
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

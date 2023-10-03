@@ -7,8 +7,12 @@ import cors from 'cors';
 import axios from 'axios';
 import fs from 'fs';
 
+import { config } from 'dotenv';
+config({ path: '../.env' });
+
 const app = express();
 const port = 3001;
+
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
@@ -34,10 +38,8 @@ app.get('/api/fetchVideoInfoAndSubs', async (req, res) => {
       return;
     }
 
-    // Split the output into lines
     const lines = stdout.trim().split('\n');
 
-    // Extract video title, ID, and thumbnail
     const title = lines[0].trim();
     const videoId = lines[1].trim();
     const thumbnailUrl = lines[2].trim();
@@ -84,7 +86,9 @@ app.get('/api/fetchMatchingCaptions', async (req, res) => {
 app.get('/api/updateCaptionsDbRecords', async (req, res) => {
   try {
     const playlistId = 'PLBeZasrZ8WgFWEaZADycG4SqaVynvM4ty';
-    const apiKey = 'AIzaSyDH9VUGvrOw3iXNS_N-OQgFn01EWMPz8gI';
+    const apiKey = process.env.YOUTUBE_API_KEY;
+
+    setTimeout(() => {}, 1000);
 
     const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
       params: {
@@ -102,7 +106,6 @@ app.get('/api/updateCaptionsDbRecords', async (req, res) => {
     }));
 
     var addedCounter = 0;
-    // Use Promise.all to wait for all fetchVideoInfoAndSubs requests to complete
     await Promise.all(playlistVideos.map(async (video) => {
       if (!(await isVideoInCollection(video.videoId, 'subtitles'))) {
         await axios.get(`http://localhost:3001/api/fetchVideoInfoAndSubs?video=${video.videoId}`);
@@ -110,13 +113,14 @@ app.get('/api/updateCaptionsDbRecords', async (req, res) => {
       }
     }));
 
-    res.json(`Added ${addedCounter} videos to the db.`); // Send the playlist videos as a JSON response
+    res.json(`Added ${addedCounter} videos to the db.`);
     console.log(`Added ${addedCounter} videos to the db.`);
   } catch (error) {
     console.error('Error fetching playlist videos:', error);
     res.status(500).json({ error: 'Error fetching playlist videos' });
   }
 });
+
 
 
 app.listen(port, () => {
