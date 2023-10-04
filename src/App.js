@@ -2,7 +2,7 @@ import axios from 'axios';
 import './App.css';
 import React, { useState } from 'react';
 import { Tooltip } from 'react-tooltip'
-import { searchSubtitles } from './dbManager.js';
+
 
 function App() {
   const [videos, setVideos] = useState([]);
@@ -16,17 +16,6 @@ function App() {
     setVideos([])
 
     try {
-      searchSubtitles(userInput)
-        .then((result) => {
-          setVideos(result.data);
-          setHighlightedQuery(userInput);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-
-/*
       await axios.get('http://localhost:3001/api/fetchMatchingCaptions', {
         params: {
           'search': userInput,
@@ -36,7 +25,6 @@ function App() {
         setHighlightedQuery(userInput);
         setLoading(false);
       })
-      */
     } catch (error) {
       console.error(`Error fetching captions for ${e.target.value}:`, error);
     }
