@@ -44,12 +44,10 @@ app.get('/api/fetchVideoInfoAndSubs', async (req, res) => {
     const videoId = lines[1].trim();
     const thumbnailUrl = lines[2].trim();
 
-    console.log('Video Title:', title);
-    console.log('Video ID:', videoId);
-    console.log('Thumbnail URL:', thumbnailUrl);
+    console.log(`Fetching data for episode '${title}'...`);
 
     const subs = await filterAndFormatSubtitles(videoId + '.fr.srt');
-    console.log(subs.length, 'subtitle items.');
+    console.log(`Found ${subs.length} subtitle items.`);
 
     await saveItemToCollection('subtitles', {
       videoId: videoId,
@@ -58,12 +56,15 @@ app.get('/api/fetchVideoInfoAndSubs', async (req, res) => {
       captions: subs
     })
 
+    console.log(`Added '${title}' to the database.`);
+
     // Delete the .srt file
     fs.unlink(`./yt-dlp/${videoId}.fr.srt`, (err) => {
       if (err) 
         console.error(`Error deleting file: ${err}`);
     });
 
+    console.log(`Finished fetching episode data.`);
     res.json(stdout)
   });
 });
@@ -73,48 +74,54 @@ app.get('/api/fetchMatchingCaptions', async (req, res) => {
   var search = req.query.search;
 
   searchSubtitles(search)
-  .then((result) => {
-    console.log('Matching subtitles:', result);
-    res.json(result)
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+    .then((result) => {
+      console.log('Matching subtitles:', result);
+      res.json(result)
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
 });
 
 
 app.get('/api/updateCaptionsDbRecords', async (req, res) => {
+  console.log('Updating database records...');
   try {
     const playlistId = 'PLBeZasrZ8WgFWEaZADycG4SqaVynvM4ty';
     const apiKey = process.env.YOUTUBE_API_KEY;
+    let nextPageToken = '';
 
     setTimeout(() => {}, 1000);
 
-    const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
-      params: {
-        part: 'snippet',
-        maxResults: 3,
-        playlistId: playlistId,
-        key: apiKey,
-      },
-    });
+    do {
+      const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
+        params: {
+          part: 'snippet',
+          maxResults: 100,
+          playlistId: playlistId,
+          key: apiKey,
+          pageToken: nextPageToken
+        },
+      });
 
-    const data = response.data;
-    const playlistVideos = data.items.map(item => ({
-      videoId: item.snippet.resourceId.videoId,
-      videoTitle: item.snippet.title,
-    }));
+      const data = response.data;
+      const playlistVideos = data.items.map(item => ({
+        videoId: item.snippet.resourceId.videoId,
+        videoTitle: item.snippet.title,
+      }));
 
-    var addedCounter = 0;
-    await Promise.all(playlistVideos.map(async (video) => {
-      if (!(await isVideoInCollection(video.videoId, 'subtitles'))) {
-        await axios.get(`http://localhost:3001/api/fetchVideoInfoAndSubs?video=${video.videoId}`);
-        addedCounter++;
-      }
-    }));
+      await Promise.all(playlistVideos.map(async (video) => {
+        if (!(await isVideoInCollection(video.videoId, 'subtitles'))) {
+          await axios.get(`http://localhost:3001/api/fetchVideoInfoAndSubs?video=${video.videoId}`);
+        }
+      }));
 
-    res.json(`Added ${addedCounter} videos to the db.`);
-    console.log(`Added ${addedCounter} videos to the db.`);
+      // Set the nextPageToken for the next iteration
+      nextPageToken = data.nextPageToken;
+    } while (nextPageToken);
+
+    res.json(`Added videos to the db.`);
+    console.log(`Added videos to the db.`);
   } catch (error) {
     console.error('Error fetching playlist videos:', error);
     res.status(500).json({ error: 'Error fetching playlist videos' });

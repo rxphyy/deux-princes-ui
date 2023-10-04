@@ -44,18 +44,15 @@ const splitSubtitles = (subtitles) => {
 
 const removeSubtitleDoubles = (subtitles) => {
   const filteredSubtitles = [];
-  var doublesRemoved = 0;
   let prevSubtitle = null;
 
   for (const subtitle of subtitles) {
     if (!prevSubtitle || (subtitle.text !== prevSubtitle.text && prevSubtitle !== null)) {
       filteredSubtitles.push(subtitle);
-      doublesRemoved++;
     }
     prevSubtitle = subtitle;
   }
 
-  console.log('Removed', doublesRemoved, 'doubles.');
   return filteredSubtitles;
 }
 
