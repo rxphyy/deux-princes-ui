@@ -21,11 +21,10 @@
     "react-scripts": "5.0.1",
     "react-tooltip": "^5.21.5",
     "srt-parser-2": "^1.2.3",
-    "web-vitals": "^2.1.4",
-    "youtube-dl-exec": "^2.4.14"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cd src && node server.js && react-scripts start",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build" ,
     "build": "react-scripts build",
