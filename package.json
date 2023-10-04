@@ -1,7 +1,7 @@
 {
   "name": "youtube-transcript",
   "type": "module",
-  "homepage": "https://rxphyy.github.io/youtube-transcript/public/",
+  "homepage": "https://rxphyy.github.io/youtube-transcript/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
