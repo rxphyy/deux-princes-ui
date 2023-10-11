@@ -7,8 +7,8 @@ import cors from 'cors';
 import axios from 'axios';
 import fs from 'fs';
 
-import { config } from 'dotenv';
-config({ path: '../.env' });
+//import { config } from 'dotenv';
+//config({ path: '../.env' });
 
 const app = express();
 const port = 3001;
@@ -18,6 +18,10 @@ const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
 
 const ytDlpPath = path.join(__dirname, '/yt-dlp');
+
+function hello() {
+  console.log('Hello');
+}
 
 app.use(express.json());
 app.use(cors());
@@ -129,7 +133,14 @@ app.get('/api/updateCaptionsDbRecords', async (req, res) => {
 });
 
 
+app.get('/api/check', async (req, res) => {
+  res.json(`It's a new day`)
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
+
+export { hello }

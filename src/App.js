@@ -2,6 +2,7 @@ import axios from 'axios';
 import './App.css';
 import React, { useState } from 'react';
 import { Tooltip } from 'react-tooltip'
+import { hello } from './server.js';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const fetchMatchingEpisodes = async (e) => {
+    hello();
     e.preventDefault();
     setLoading(true);
     setVideos([])
