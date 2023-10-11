@@ -16,7 +16,7 @@ function App() {
     setVideos([])
 
     try {
-      await axios.get('http://localhost:3001/api/fetchMatchingCaptions', {
+      await axios.get('https://testtest-5uol.onrender.com/api/fetchMatchingCaptions', {
         params: {
           'search': userInput,
         }
