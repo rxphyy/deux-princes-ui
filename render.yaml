@@ -1,0 +1,16 @@
+services:
+  - name: backend
+    buildCommand: npm install && npm start
+    environment:
+      - NODE_ENV=production
+    routes:
+      - type: http
+        primary: true
+
+  - name: frontend
+    buildCommand: npm install && npm run build
+    environment:
+      - NODE_ENV=production
+    routes:
+      - type: http
+        primary: true
