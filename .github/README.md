@@ -6,7 +6,7 @@ L'application prends un recherche de l'utilisateur et appelle l'[API *Data V3* d
 
 J'ai créé ceci pour mettre fin aux conversations avec mon frère où on se rappelait des meilleurs moments du podcast, mais qu'il nous était tout le temps impossible de retrouver l'épisode en particulier.
 
-J'ai été inspiré par [un service](https://tmgstudios.tv/pages/search) offert sur la page du podcast [*Tiny Meat Gang*](https://tmgstudios.tv/) qui offre la même fonctionnalité.
+J'ai été inspiré par [un service](https://tmgstudios.tv/pages/search) sur le site du podcast [*Tiny Meat Gang*](https://tmgstudios.tv/) qui offre la même fonctionnalité.
 
 #
 
