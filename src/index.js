@@ -11,7 +11,7 @@ root.render(
       <App/>
       <div className='footer'>
         <a className='footerInfo' target="_blank" rel="noopener noreferrer" href='https://github.com/rxphyy?tab=repositories'>
-          <i id='footerIcon' class="fa-brands fa-github"></i>
+          <i id='footerIcon' className="fa-brands fa-github"></i>
           &nbsp;Fait par Raphaël Marier
         </a>
       </div>

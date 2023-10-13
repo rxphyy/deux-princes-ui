@@ -9,8 +9,14 @@ function App() {
   const [userInput, setUserInput] = useState('');
   const [highlightedQuery, setHighlightedQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const fetchMatchingEpisodes = async (e) => {
+    if (userInput === '') {
+      setErrorMsg('Veuillez remplir le champ.')
+      return;
+    }
+    setErrorMsg('')
     e.preventDefault();
     setLoading(true);
     setVideos([])
@@ -21,9 +27,16 @@ function App() {
           'search': userInput,
         }
       }).then((res) => {
-        setVideos(res.data);
-        setHighlightedQuery(userInput);
-        setLoading(false);
+        if (res.data.length > 0 ) {
+          setVideos(res.data);
+          setHighlightedQuery(userInput);
+          setLoading(false);
+        } else {
+          setVideos([]);
+          setHighlightedQuery('');
+          setLoading(false);
+          setErrorMsg('Aucun épisode trouvé.')
+        }
       })
     } catch (error) {
       console.error(`Error fetching captions for ${e.target.value}:`, error);
@@ -41,24 +54,25 @@ function App() {
           <div className='formContainer'>
             <div className='box input_field'>
               <i id='icon' className="fa-solid fa-magnifying-glass"></i>
-              <input className='input_field_inner' value={userInput} onChange={(e) => setUserInput(e.target.value)} type='text' placeholder={''}></input>
+              <input required className='input_field_inner' value={userInput} onChange={(e) => setUserInput(e.target.value)} type='text' placeholder={''}></input>
             </div>
 
-            <div className='input_box'>
-              <input required pattern="[a-zA-Z0-9]+" className='box input_btn' type='submit' value={'Chercher'}></input>
+            <div className='subContainer'>
+              <div className='input_box'>
+                <input required className='box input_btn' type='submit' value={'Chercher'}></input>
+              </div>
+
+              <div className='infobox'>
+                <p
+                  data-tooltip-id="my-tooltip" 
+                  data-tooltip-content="Entrez un sujet et retrouvez tous les moments de Deux Princes où il est mentionné.">
+                  <i id='infoIcon' className="fa-regular fa-circle-question"></i>
+                </p>
+                <Tooltip className='tesst' id="my-tooltip" variant='light' />
+              </div>
             </div>
-
-
-            <div className='infobox'>
-              <p
-                data-tooltip-id="my-tooltip" 
-                data-tooltip-content="Entrez un sujet et retrouvez tous les moments de Deux Princes où il est mentionné.">
-                <i id='infoIcon' className="fa-regular fa-circle-question"></i>
-              </p>
-              <Tooltip className='tesst' id="my-tooltip" variant='light' />
-            </div>
-
           </div>
+          <p className='errorMsg'>{errorMsg}</p>
         </form>
 
         {loading ? 
