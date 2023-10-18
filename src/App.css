@@ -286,6 +286,17 @@
   text-underline-offset: 0.2em;
 }
 
+.viewMoreLessRow, .viewMoreLessRow {
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.2s;
+}
+
+.viewMoreLessRow:focus, .viewMoreLessRow:hover {
+  cursor: pointer;
+  background-color: #fcf1c21e;
+}
+
 /* Media query for small screens */
 @media screen and (max-width: 768px) {
   .pageTitle {

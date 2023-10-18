@@ -6,6 +6,8 @@ import { Tooltip } from 'react-tooltip'
 
 function App() {
   const [videos, setVideos] = useState([]);
+  // Initialize the expanded state for each video
+  const [expanded, setExpanded] = useState({});
   const [userInput, setUserInput] = useState('');
   const [highlightedQuery, setHighlightedQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -88,7 +90,7 @@ function App() {
                 <h3 className='videoItemTitleLbl'>« {video.videoTitle.substring(15)} »</h3>
                 
                 <div className='timestampList'>
-                {video.captions.map((caption, index) => (
+                {video.captions.slice(0, expanded[videoIndex] ? video.captions.length : 5).map((caption, index) => (
                   <a key={index} className='timestampHref' target="_blank" rel="noopener noreferrer" href={`https://youtube.com/watch?v=${video.videoId}&t=${caption.startTime.split(':').reduce((acc, time) => acc * 60 + parseInt(time), 0)}`}>
                     <div className='timestampItem'>
                       <div className="timestampTitle">
@@ -106,6 +108,12 @@ function App() {
                     </div>
                   </a>
                 ))}
+
+                {video.captions.length > 5 && (
+                  <p className='viewMoreLessRow' onClick={() => setExpanded({ ...expanded, [videoIndex]: !expanded[videoIndex] })}>
+                    {expanded[videoIndex] ? `Voir moins d'items` : `Voir ${video.captions.length - 5} autres items`}
+                  </p>
+                )}
                 </div>
               </div>
             )) : <></>}
