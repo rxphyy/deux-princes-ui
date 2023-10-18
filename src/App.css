@@ -15,6 +15,7 @@
   background-repeat: no-repeat;
   background-size:cover;
   background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .App {
@@ -178,21 +179,36 @@
   width: 100px;
 }
 
+/*
 .videosContainer {
   display: flex;
   flex-wrap: wrap;
-  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr)); /* Adjust the minmax values as needed */
-  gap: 15px; /* Adjust the gap between items as needed */
-  justify-content: center; /* Center items horizontally */
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 15px; 
+  justify-content: center; 
   margin: 30px;
   align-items: center;
 }
+*/
+
+.videosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 15px; 
+  justify-content: center; 
+  margin: 30px;
+  align-items: flex-start;
+}
+
+
+
 
 .videoItemBox {
+
   border-radius: 10px;
   border: 3px solid #fcf1c2;
   position: relative;
-  margin: 10px auto;
   background-color: #111113;
   height: fit-content;
   max-width: 70vh;
@@ -324,6 +340,7 @@
   .input_btn {
     -webkit-text-fill-color: black; 
     -webkit-opacity: 1; 
+    opacity: 1;
   }
 
   .videoItemBox {
