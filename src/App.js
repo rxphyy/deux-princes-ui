@@ -15,7 +15,7 @@ function App() {
 
   const fetchMatchingEpisodes = async (e) => {
     if (userInput === '') {
-      setErrorMsg('Veuillez remplir le champ.')
+      setErrorMsg('Veuillez remplir le champs.')
       return;
     }
     setErrorMsg('')
